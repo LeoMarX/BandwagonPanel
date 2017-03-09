@@ -1,0 +1,25 @@
+{
+  "name": "bandwagon_pannel",
+  "version": "0.0.1",
+  "description": "A Bandwagon host pannel",
+  "main": "start.js",
+  "scripts": {
+    "start": "node --use_strict start.js"
+  },
+  "keywords": [
+    "Bandwagon",
+    "pannel"
+  ],
+  "author": "leo Mars",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LeoSpark"
+  },
+  "dependencies": {
+    "json-stable-stringify": "^1.0.1",
+    "json-stringify": "^1.0.0",
+    "mime": "^1.3.4",
+    "node-stringify": "0.0.19"
+  }
+}

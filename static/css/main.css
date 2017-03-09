@@ -1,0 +1,61 @@
+html {
+	font-size: 14px;
+}
+
+blockquote,body,button,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,hr,input,legend,li,ol,p,pre,td,textarea,th,ul {
+		margin:0;
+		padding:0;
+}
+
+body {
+	font-family: "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", "PingFang SC", "Microsoft YaHei", "微軟正黑體", "Noto Sans", sans-serif;
+	background-color: #F5F7FA;
+}
+
+
+#wrap {
+	max-width: 860px;
+	min-height: 70rem;
+	padding: 2rem 0;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#logo {
+	position: fixed;
+	top: 0;
+	z-index: 0;
+	width: 100%;
+	color: rgba(238, 238, 238, 0.6);
+	cursor: default;
+	overflow: hidden;
+}
+
+#logo h1 {
+	width: 100%;
+	margin-top: -0.5rem;
+	text-align: left;
+	font-weight: 400;
+	font-style: italic;
+	font-size: 3rem;
+	line-height: 1;
+}
+
+#mainbox {
+	position: relative;
+	z-index: 1;
+}
+
+#indicator {
+	width: 1rem;
+	height: 1rem;
+	padding: 0;
+	border-radius: 50%;
+	margin: 2rem 1.5rem;
+	float: left;
+}
+
+#base,
+#usage {
+	padding: 2rem 1rem;
+}

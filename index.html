@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bandwagon Panel</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" href="https://cdn.bootcss.com/bulma/0.3.2/css/bulma.min.css">
+	<link rel="stylesheet" type="text/css" href="./static/css/main.css">
+    <!--<script src="./static/js/vue.js"></script>-->
+    <script src="https://cdn.bootcss.com/vue/2.2.1/vue.min.js"></script>
+	<script src="./status.js"></script>
+	<style>
+		.column .heading {
+			font-size: 12px;
+		}
+
+		#base .column {
+			border-bottom: dotted 1px #7FC9FF;
+		}
+
+		#usage .title {
+			margin: .75rem;
+		}
+
+		#usage > .tile + .tile {
+			margin-top: .5rem;
+		}
+
+		@media screen and (max-width: 768px) {
+			#usage .title {
+				margin: 0;
+			}
+
+			#usage .tile .is-parent {
+				display: flex;
+				padding: 0.75rem 0;
+				flex-flow: column-reverse wrap-reverse;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<div id="wrap" class="container">
+
+		<div id="logo">
+			<h1 class="is-unselectable">Bandwagon Host</h1>
+		</div>
+
+		<div id="mainbox" class="box">
+			
+			<div id="status" class="columns is-narrow">
+				<div id="indicator" class="column is-1 notification" :class="isRunning"></div>
+				<div class="column is-10">
+					<h2 class="title">The server is {{ status_msg }}.</h2>	
+					<p class="subtitle">As of {{ reset_date }} MST.</p>			
+				</div>
+			</div>
+			
+			<div id="base" class="columns is-multiline">
+				<div class="column is-half">
+					<p class="heading">主机名称</p>
+					<p class="title"> {{ msg_1 }} </p>
+				</div>
+				<div class="column is-half">
+					<p class="heading">主机地址</p>
+					<p class="title"> {{ msg_2 }} </p>
+				</div>
+				<div class="column is-half">
+					<p class="heading">主机系统</p>
+					<p class="title"> {{ msg_3 }} </p>
+				</div>
+				<div class="column is-half">
+					<p class="heading">主机 ip</p>
+					<p class="title"> {{ msg_4 }} </p>
+				</div>
+				<div class="column is-half">
+					<p class="heading">SSH 端口</p>
+					<p class="title"> {{ msg_5 }} </p>
+				</div>
+				<div class="column is-half">
+					<p class="heading">CPU 负载</h3>
+					<p class="title"> {{ msg_6 }} Processes</p>
+				</div>
+			</div>
+	
+			<div id="usage" class="container">
+
+				<div class="tile is-vertical">
+					<p class="title">RAM</p>
+					<div class="tile is-parent">
+						<p class="tile is-child subtitle">{{ ram_used }}/{{ ram_all }} MB</p>
+						<progress class="tile is-child is-10 progress is-small " :class="statusStyle(ram_used, ram_all)" :value="ram_used" :max="ram_all">{{ram_used / ram_all * 100}}%</progress>
+					</div>
+				</div>
+
+				<div class="tile is-vertical">
+					<p class="title">SWAP</p>
+					<div class="tile is-parent">
+						<p class="tile is-child subtitle">{{ swap_used }}/{{ swap_all }} MB</p>
+						<progress class="tile is-child is-10 progress is-small" :class="statusStyle(swap_used, swap_all)" :value="swap_used" :max="swap_all">{{swap_used / swap_all * 100}}%</progress>
+					</div>
+				</div>
+
+				<div class="tile is-vertical">
+					<p class="title">Disk usage</p>
+					<div class="tile is-parent">
+						<p class="tile is-child subtitle">{{ disk_used }}/{{ disk_all }} GB</p>
+						<progress class="tile is-child is-10 progress is-small is-success" :value="disk_used" :max="disk_all">{{disk_used / disk_all * 100}}%</progress>
+					</div>
+				</div>
+
+				<div class="tile is-vertical">
+					<p class="title">Bandwidth usage</p>
+					<div class="tile is-parent">
+						<p class="tile is-child subtitle">{{ bandwidth_used }}/{{ bandwidth_all }} GB</p>
+						<progress class="tile is-child is-10 progress is-small" :class="statusStyle(bandwidth_used, bandwidth_all)" :value="bandwidth_used" :max="bandwidth_all">{{bandwidth_used / bandwidth_all * 100}}%</progress>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+	<script>
+		window.onload = function() {
+
+			var statusData = _statusData || "";
+			if(!statusData) {
+                console.warn("no data!");
+				return;
+			}
+			// console.log(statusData);
+
+            // 处理数据, 保留后 2 位小数点
+            var bandwidthUsed = Number(statusData.data_counter / 1073741824).toFixed(2);
+			var ramUsed = Number(statusData.vz_status.oomguarpages / 256).toFixed(2);
+			var swapUsed = Number(statusData.vz_status.swappages / 256).toFixed(2);
+			var diskUsed = Number(statusData.vz_quota.occupied_kb / 1048576).toFixed(2);
+
+			var Month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+			var reTime = new Date(statusData.data_next_reset * 1000);
+
+            var baseStatus = new Vue({
+                el: "#status",
+                data: {
+                    status_msg: statusData.vz_status.status,
+					reset_date: Month[reTime.getMonth()] + " " + reTime.getDate() + ", " +reTime.getFullYear() + " at " + reTime.getHours() + ":00"
+                },
+				computed: {
+					isRunning: function() {
+						return this.status_msg === "running" ? "is-success" : "is-danger";
+					}
+				}
+            });
+
+            var base = new Vue({
+                el: "#base",
+                data: {
+                    msg_1: statusData.hostname,
+                    msg_2: statusData.node_location,
+                    msg_3: statusData.os,
+                    msg_4: statusData.ip_addresses[0],
+                    msg_5: 22,
+                    msg_6: statusData.vz_status.nproc
+                }
+            });
+
+            var usage = new Vue({
+                el: "#usage",
+                data: {
+                    ram_used: ramUsed,
+                    ram_all: statusData.plan_ram/1048576,
+                    swap_used: swapUsed,
+                    swap_all: statusData.plan_swap/1048576,
+                    disk_used: diskUsed,
+                    disk_all: statusData.plan_disk/1073741824,
+                    bandwidth_used: bandwidthUsed,
+                    bandwidth_all: statusData.plan_monthly_data/1073741824
+                },
+                methods: {
+                    statusStyle: function(used, all) {
+                        var result = used/all;
+
+                        if(result <= 0.4) {
+                            return "is-success";
+                        } else if(result <= 0.8) {
+                            return "is-warning";
+                        } else {
+                            return "is-danger";
+                        }
+                    }
+                }
+            });
+
+		}
+	</script>
+</body>
+</html>
