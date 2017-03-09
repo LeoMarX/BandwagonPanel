@@ -57,7 +57,7 @@ function wirteFs(data) {
         return;
     }
 
-    fs.writeFileSync('status.js', param, function (err) {
+    fs.writeFile('status.js', param, function (err) {
         if (err) {
             console.log(err);
         } else {
