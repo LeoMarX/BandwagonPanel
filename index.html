@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<link rel="stylesheet" href="https://cdn.bootcss.com/bulma/0.3.2/css/bulma.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/bulma/0.3.2/css/bulma.min.css">
 	<link rel="stylesheet" type="text/css" href="./static/css/main.css">
     <script src="https://cdn.bootcss.com/vue/2.2.1/vue.min.js"></script>
 	<script src="./status.js"></script>
@@ -90,7 +90,7 @@
 					<p class="title">RAM</p>
 					<div class="tile is-parent">
 						<p class="tile is-child subtitle">{{ ram_used }}/{{ ram_all }} MB</p>
-						<progress class="tile is-child is-10 progress is-small " :class="statusStyle(ram_used, ram_all)" :value="ram_used" :max="ram_all">{{ram_used / ram_all * 100}}%</progress>
+						<progress class="tile is-child is-10 progress is-small" :class="statusStyle(ram_used, ram_all)" :value="ram_used" :max="ram_all">{{ram_used / ram_all * 100}}%</progress>
 					</div>
 				</div>
 
@@ -106,7 +106,7 @@
 					<p class="title">Disk usage</p>
 					<div class="tile is-parent">
 						<p class="tile is-child subtitle">{{ disk_used }}/{{ disk_all }} GB</p>
-						<progress class="tile is-child is-10 progress is-small is-success" :value="disk_used" :max="disk_all">{{disk_used / disk_all * 100}}%</progress>
+						<progress class="tile is-child is-10 progress is-small" :class="statusStyle(disk_used, disk_all)" :value="disk_used" :max="disk_all">{{disk_used / disk_all * 100}}%</progress>
 					</div>
 				</div>
 
